@@ -1,9 +1,12 @@
+using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 1.5f;
-
+    public Rigidbody2D playerBody;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,19 +18,32 @@ public class PlayerController : MonoBehaviour
     {
         // Basic Movement Code
         if(Input.GetKeyDown(KeyCode.W)){
-            transform.position = new Vector3(transform.position.x, transform.position.y + moveSpeed, transform.position.z);
+            checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y + moveSpeed));
         }
 
         if(Input.GetKeyDown(KeyCode.A)){
-            transform.position = new Vector3(transform.position.x - moveSpeed, transform.position.y, transform.position.z);
+            checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y));
         }
 
         if(Input.GetKeyDown(KeyCode.S)){
-            transform.position = new Vector3(transform.position.x, transform.position.y - moveSpeed, transform.position.z);
+            checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y - moveSpeed));
         }
 
         if(Input.GetKeyDown(KeyCode.D)){
-            transform.position = new Vector3(transform.position.x + moveSpeed, transform.position.y, transform.position.z);
+            checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y));
         }
+    }
+
+    //Checks if the spot the player is about to move to is an unoccupied tile.
+    void checkDestinationEmpty(UnityEngine.Vector2 direction)
+    {
+        UnityEngine.Vector2 targetSpot = direction; 
+        Collider2D spotCheck = Physics2D.OverlapPoint(targetSpot);
+
+        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out TileVacancy tVac) && tVac.occupant == null)
+        {
+            playerBody.position = targetSpot;
+        }
+        return;
     }
 }
