@@ -151,7 +151,9 @@ MonoBehaviour:
   tile: {fileID: 3832385857885929567, guid: f1513cc5351103c45ae9cac79a9c68c0, type: 3}
   wall: {fileID: 4138323447355223405, guid: 5c5948560220b0543bb14688f58e43d3, type: 3}
   player: {fileID: 5998469897853359155, guid: 5790ed77430a4a24d912ca53c85d2b0c, type: 3}
-  tileNum: 10
+  turnChance: 15
+  branchChance: 60
+  gridInterval: 1.5
 --- !u!4 &192064946
 Transform:
   m_ObjectHideFlags: 0
