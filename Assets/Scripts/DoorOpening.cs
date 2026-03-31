@@ -4,16 +4,33 @@ using UnityEngine.Tilemaps;
 
 public class DoorOpening : MonoBehaviour
 {
-    TileVacancy tileVac;
+    public TileVacancy tileVac;
+    public SpriteRenderer openDoor;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       tileVac = gameObject.GetComponent<TileVacancy>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    // Switches door textures from open to closed and vice versa while changing its occupant accordingly.
+    public void useDoor()
+    {
+        // Closes door if open and unnoccupied.
+        if (tileVac.occupant == null)
+        {
+            tileVac.occupant = this.gameObject;
+            openDoor.enabled = true;
+
+        } else if(tileVac.occupant == this.gameObject) // Opens door if closed
+        {
+            tileVac.occupant = null;
+            openDoor.enabled = false;
+        }
     }
 }
