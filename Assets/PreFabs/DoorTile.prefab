@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 292bc46b6d1331d48ad2878a1651cb5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  occupant: {fileID: 0}
+  occupant: {fileID: 2853878609269654612}
 --- !u!114 &-8457998808704412986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +162,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee95c7a3f13bdf4d93610bb907241a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileVac: {fileID: 938874295284711500}
+  openDoor: {fileID: 1078037782814291976}
+  closedDoor: {fileID: 3273089503831961719}
 --- !u!1 &3181244336688433895
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +204,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3181244336688433895}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1

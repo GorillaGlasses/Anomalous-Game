@@ -15,44 +15,23 @@ public class levelGeneration : MonoBehaviour
     public int turnChance = 15;
     public int branchChance = 60; // Percent chance for the path to branch 
     public float gridInterval = 1.5f;
+    public int roomCount = 5;
+    public int playerCount = 1;
+    public bool exitRoom = false; // When true, the next roomGen will generate an exit to the floor.
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pathGen(50f);
-        roomGen(UnityEngine.Random.Range(5,15), UnityEngine.Random.Range(5,15), randomCoordGeneration(), randomCoordGeneration());
+        pathGen(25f, new UnityEngine.Vector2(0/*randomCoordGeneration()*/, 1.5f/*randomCoordGeneration()*/), 0, 1.5f);
+        roomGen(UnityEngine.Random.Range(5,15), UnityEngine.Random.Range(5,15), 0/*randomCoordGeneration()*/, 0/*randomCoordGeneration()*/);
     }
 
     //Generates a random path 
-    void pathGen(float tileNum)
+    void pathGen(float tileNum, UnityEngine.Vector2 startingPos, float baseX, float baseY)
     {
-        UnityEngine.Vector2 startingPos = new UnityEngine.Vector2(randomCoordGeneration(), randomCoordGeneration());
-        int directionChance = UnityEngine.Random.Range(1,5);
-        float xAdjust;
-        float yAdjust;
-        switch (directionChance){
-            case 1: // Case for going right
-                xAdjust = 1.5f;
-                yAdjust = 0;
-                break;
-            case 2: // Case for going left
-                xAdjust = -1.5f;
-                yAdjust = 0;
-                break;
-            case 3: // Case for going up
-                xAdjust = 0;
-                yAdjust = 1.5f;
-                break;
-            case 4: // Case for going down
-                xAdjust = 0;
-                yAdjust = -1.5f;
-                break;
-            default: // Goes right if case is out of bounds, prints error
-                xAdjust = 1.5f;
-                yAdjust = 0;
-                UnityEngine.Debug.Log("Starting Direction: Out of bounds."); 
-                break;
-        }
+        int directionChance;
+        float xAdjust = baseX;
+        float yAdjust = baseY;
         UnityEngine.Debug.Log(tileNum + "\nXAdj: " + xAdjust + "\nYAdj: " + yAdjust + "\nXPos: " + startingPos.x + "\nYPos: " + startingPos.y);
         UnityEngine.Vector2 workingPos = new UnityEngine.Vector2(startingPos.x + xAdjust, startingPos.y + yAdjust);
         Collider2D spotCheck = Physics2D.OverlapPoint(workingPos);
@@ -60,7 +39,12 @@ public class levelGeneration : MonoBehaviour
         {
             if (spotCheck == null) // So long as the next tile is vacant we can proceed
             {
-                Instantiate(tile, workingPos, transform.rotation);
+                if (i == tileNum-1)
+                {
+                    Instantiate(door, workingPos, transform.rotation);
+                } else {
+                    Instantiate(tile, workingPos, transform.rotation);
+                }
                 placeAdjacentWalls(workingPos, xAdjust, yAdjust);
                 directionChance = UnityEngine.Random.Range(1,101);
                 if (directionChance > turnChance) // If chance check is greater than the chance to turn, we continue in the same direction, not turning.
@@ -152,7 +136,7 @@ public class levelGeneration : MonoBehaviour
                             xAdjust = 0;
                             yAdjust = -1.5f;
                             break;
-                }
+                    }
                 }else if (xAdjust < 0) // Handles if the previous direction was going LEFT
                 {
                     directionChance = UnityEngine.Random.Range(1,3);
@@ -211,50 +195,73 @@ public class levelGeneration : MonoBehaviour
         float generationY = yPos;
         int playerPlace = (int)UnityEngine.Random.Range(1, roomWidth*roomLength);
         int tileCount = 0;
+        Collider2D spotCheck;
         for (int i = 0; i < roomLength; i++)
         {
             for (int j = 0; j < roomWidth; j++)
             {
                 Instantiate(tile, new UnityEngine.Vector3(generationX,generationY,0), transform.rotation);
-                
+
                 // Wall generation
                 if(j == 0){
+                    spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY));
                     // Generates wall to the left
-                    Instantiate(wall, new UnityEngine.Vector3(generationX-1.5f,generationY,0), transform.rotation);
-                    
+                    if(spotCheck == null){
+                        Instantiate(wall, new UnityEngine.Vector3(generationX-1.5f,generationY,0), transform.rotation);
+                    }
                     //Places walls in the left corners
                     if (i == 0)
                     {
-                        Instantiate(wall, new UnityEngine.Vector3(generationX-1.5f,generationY+1.5f,0), transform.rotation);
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY+1.5f));
+                        if(spotCheck == null){
+                            Instantiate(wall, new UnityEngine.Vector3(generationX-1.5f,generationY+1.5f,0), transform.rotation);
+                        }
                     }
                     else if (i == roomLength-1)
                     {
-                        Instantiate(wall, new UnityEngine.Vector3(generationX-1.5f,generationY-1.5f,0), transform.rotation);
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY-1.5f));
+                        if(spotCheck == null){
+                            Instantiate(wall, new UnityEngine.Vector3(generationX-1.5f,generationY-1.5f,0), transform.rotation);
+                        }
                     }
                 }
                 else if (j == roomWidth-1)
                 {
+                    spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX+1.5f,generationY));
                     // Generates wall to the right
-                    Instantiate(wall, new UnityEngine.Vector3(generationX+1.5f,generationY,0), transform.rotation);
-                    
+                    if(spotCheck == null){
+                        Instantiate(wall, new UnityEngine.Vector3(generationX+1.5f,generationY,0), transform.rotation);
+                    }
                     //Places walls in the right corners
                     if (i == 0)
                     {
-                        Instantiate(wall, new UnityEngine.Vector3(generationX+1.5f,generationY+1.5f,0), transform.rotation);
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY+1.5f));
+                        if(spotCheck == null){
+                            Instantiate(wall, new UnityEngine.Vector3(generationX+1.5f,generationY+1.5f,0), transform.rotation);
+                        }
                     }
                     else if (i == roomLength-1)
                     {
-                        Instantiate(wall, new UnityEngine.Vector3(generationX+1.5f,generationY-1.5f,0), transform.rotation);
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY+1.5f));
+                        if(spotCheck == null){
+                            Instantiate(wall, new UnityEngine.Vector3(generationX+1.5f,generationY-1.5f,0), transform.rotation);
+                        }
                     }
                 }
 
                 if (i == 0)
                 {
-                    Instantiate(wall, new UnityEngine.Vector3(generationX,generationY+1.5f,0), transform.rotation);
+                    spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY+1.5f));
+                    if(spotCheck == null){
+                        Instantiate(wall, new UnityEngine.Vector3(generationX,generationY+1.5f,0), transform.rotation);
+                    }
                 }
                 else if (i == roomLength-1)
                 {
-                    Instantiate(wall, new UnityEngine.Vector3(generationX,generationY-1.5f,0), transform.rotation);
+                    spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY-1.5f));
+                    if(spotCheck == null){
+                        Instantiate(wall, new UnityEngine.Vector3(generationX,generationY-1.5f,0), transform.rotation);
+                    }
                 }
         
                 tileCount++;

@@ -88,6 +88,9 @@ public class PlayerController : MonoBehaviour
         {
             playerBody.position = targetSpot;
             camPos.position = new UnityEngine.Vector3(targetSpot.x, targetSpot.y, -10);
+        } else if (spotCheck.gameObject.TryGetComponent<DoorOpening>(out DoorOpening dOpen))
+        {
+            dOpen.useDoor();
         }
         return;
     }
