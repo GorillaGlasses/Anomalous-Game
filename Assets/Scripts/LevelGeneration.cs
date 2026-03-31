@@ -235,14 +235,14 @@ public class levelGeneration : MonoBehaviour
                     //Places walls in the right corners
                     if (i == 0)
                     {
-                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY+1.5f));
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX+1.5f,generationY+1.5f));
                         if(spotCheck == null){
                             Instantiate(wall, new UnityEngine.Vector3(generationX+1.5f,generationY+1.5f,0), transform.rotation);
                         }
                     }
                     else if (i == roomLength-1)
                     {
-                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY+1.5f));
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX+1.5f,generationY-1.5f));
                         if(spotCheck == null){
                             Instantiate(wall, new UnityEngine.Vector3(generationX+1.5f,generationY-1.5f,0), transform.rotation);
                         }
