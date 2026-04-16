@@ -155,7 +155,7 @@ MonoBehaviour:
   turnChance: 0
   doorChance: 50
   gridInterval: 1.5
-  roomCount: 5
+  roomCount: 10
   placedRooms: 0
   playerCount: 1
   placedPlayers: 0
