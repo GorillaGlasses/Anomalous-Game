@@ -25,14 +25,16 @@ public class levelGeneration : MonoBehaviour
 
 
 
-    public class DoorInstance
+    public class DoorInstance // Class that tracks individual doors that are created to keep track of location and direction
     {
         public UnityEngine.Vector2 doorLocation;
         public string direction;
-        public DoorInstance(UnityEngine.Vector2 doorLoc, string dir)
+        bool isFromPath;
+        public DoorInstance(UnityEngine.Vector2 doorLoc, string dir, bool fromPath)
         {
             doorLocation = doorLoc;
             direction = dir;
+            isFromPath = fromPath;
         }
 
         public UnityEngine.Vector2 getLocation()
@@ -44,31 +46,83 @@ public class levelGeneration : MonoBehaviour
         {
             return direction;
         }
+
+        public bool fromPath()
+        {
+            return isFromPath;
+        }
     }
 
     public List<DoorInstance> DoorInstances = new List<DoorInstance>(); // List of door instances that is updated as the level generates.
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Start() 
     {
-        roomGen(UnityEngine.Random.Range(5,15), UnityEngine.Random.Range(5,15), randomCoordGeneration(), randomCoordGeneration(), "Right");
-
-        pathGen(8f, DoorInstances.Last().getLocation(), DoorInstances.Last().getDirection());
-
         int roomLength = UnityEngine.Random.Range(5,15);
         int roomWidth = UnityEngine.Random.Range(5,15);
-        if(DoorInstances.Last().getDirection() == "Right")
+        roomGen(roomLength, roomWidth, randomCoordGeneration(), randomCoordGeneration(), "Right");
+
+        while(placedRooms < roomCount){
+            if(!DoorInstances.Last().fromPath()){
+                pathGen(UnityEngine.Random.Range(4,11), DoorInstances.Last().getLocation(), DoorInstances.Last().getDirection());
+            }
+            
+            if(DoorInstances.Last().fromPath()){
+                if(DoorInstances.Last().getDirection() == "Right")
+                {
+                    roomLength = UnityEngine.Random.Range(5,15);
+                    roomWidth = UnityEngine.Random.Range(5,15);
+                    roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x+gridInterval, DoorInstances.Last().getLocation().y+((roomLength)/2)*gridInterval, DoorInstances.Last().getDirection());
+                }else if (DoorInstances.Last().getDirection() == "Left")
+                {
+                    roomLength = UnityEngine.Random.Range(5,15);
+                    roomWidth = UnityEngine.Random.Range(5,15);
+                    roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-(roomWidth)*gridInterval, DoorInstances.Last().getLocation().y+((roomLength)/2)*gridInterval, DoorInstances.Last().getDirection());
+                }else if (DoorInstances.Last().getDirection() == "Up")
+                {
+                    roomLength = UnityEngine.Random.Range(5,15);
+                    roomWidth = UnityEngine.Random.Range(5,15);
+                    roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-((roomWidth)/2)*gridInterval, DoorInstances.Last().getLocation().y+(roomLength)*gridInterval, DoorInstances.Last().getDirection());
+                }else if(DoorInstances.Last().getDirection() == "Down")
+                {
+                    roomLength = UnityEngine.Random.Range(5,15);
+                    roomWidth = UnityEngine.Random.Range(5,15);
+                    roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-((roomWidth)/2)*gridInterval, DoorInstances.Last().getLocation().y-gridInterval, DoorInstances.Last().getDirection());
+                }
+            }
+        }
+
+        doorChance = 0;
+
+        while (DoorInstances.Count() != 0)
         {
-            roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x+1.5f, DoorInstances.Last().getLocation().y+((roomLength)/2)*1.5f, DoorInstances.Last().getDirection());
-        }else if (DoorInstances.Last().getDirection() == "Left")
-        {
-            roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-(roomWidth)*1.5f, DoorInstances.Last().getLocation().y+((roomLength)/2)*1.5f, DoorInstances.Last().getDirection());
-        }else if (DoorInstances.Last().getDirection() == "Up")
-        {
-            roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-((roomWidth)/2)*1.5f, DoorInstances.Last().getLocation().y+(roomLength)*1.5f, DoorInstances.Last().getDirection());
-        }else if(DoorInstances.Last().getDirection() == "Down")
-        {
-            roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-((roomWidth)/2)*1.5f, DoorInstances.Last().getLocation().y-1.5f, DoorInstances.Last().getDirection());
+            if(!DoorInstances.Last().fromPath()){
+                pathGen(UnityEngine.Random.Range(4,11), DoorInstances.Last().getLocation(), DoorInstances.Last().getDirection());
+            }
+            
+            if(DoorInstances.Last().fromPath()){
+                if(DoorInstances.Last().getDirection() == "Right")
+                {
+                    roomLength = UnityEngine.Random.Range(5,15);
+                    roomWidth = UnityEngine.Random.Range(5,15);
+                    roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x+gridInterval, DoorInstances.Last().getLocation().y+((roomLength)/2)*gridInterval, DoorInstances.Last().getDirection());
+                }else if (DoorInstances.Last().getDirection() == "Left")
+                {
+                    roomLength = UnityEngine.Random.Range(5,15);
+                    roomWidth = UnityEngine.Random.Range(5,15);
+                    roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-(roomWidth)*gridInterval, DoorInstances.Last().getLocation().y+((roomLength)/2)*gridInterval, DoorInstances.Last().getDirection());
+                }else if (DoorInstances.Last().getDirection() == "Up")
+                {
+                    roomLength = UnityEngine.Random.Range(5,15);
+                    roomWidth = UnityEngine.Random.Range(5,15);
+                    roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-((roomWidth)/2)*gridInterval, DoorInstances.Last().getLocation().y+(roomLength)*gridInterval, DoorInstances.Last().getDirection());
+                }else if(DoorInstances.Last().getDirection() == "Down")
+                {
+                    roomLength = UnityEngine.Random.Range(5,15);
+                    roomWidth = UnityEngine.Random.Range(5,15);
+                    roomGen(roomWidth, roomLength, DoorInstances.Last().getLocation().x-((roomWidth)/2)*gridInterval, DoorInstances.Last().getLocation().y-gridInterval, DoorInstances.Last().getDirection());
+                }
+            }
         }
     }
 
@@ -112,16 +166,16 @@ public class levelGeneration : MonoBehaviour
                 {
                     Instantiate(door, workingPos, transform.rotation);
                     if(xAdjust > 0){
-                        DoorInstances.Add(new DoorInstance(workingPos, "Right"));
+                        DoorInstances.Add(new DoorInstance(workingPos, "Right", true));
                     } else if (xAdjust < 0)
                     {
-                        DoorInstances.Add(new DoorInstance(workingPos, "Left"));
+                        DoorInstances.Add(new DoorInstance(workingPos, "Left", true));
                     }else if (yAdjust > 0)
                     {
-                        DoorInstances.Add(new DoorInstance(workingPos, "Up"));
+                        DoorInstances.Add(new DoorInstance(workingPos, "Up", true));
                     }else if (yAdjust < 0)
                     {
-                        DoorInstances.Add(new DoorInstance(workingPos, "Down"));
+                        DoorInstances.Add(new DoorInstance(workingPos, "Down", true));
                     }
                 } else {
                     Instantiate(tile, workingPos, transform.rotation);
@@ -270,33 +324,72 @@ public class levelGeneration : MonoBehaviour
 
     // Generates tiles in a rectangular formation based on the assigned parameters. The outermost tiles are all brick walls instead. 
     // Also randomly spawns the player on one of these tiles.
-    void roomGen(float roomWidth, float roomLength, float xPos, float yPos, string startDir)
+    void roomGen(float roomWidth, float roomLength, float xPos, float yPos, string startDir) // ! Consider reworking this to make it so the doors are randomly predetermined instead of the fixed order they are currently checked in. !
     {
         if (DoorInstances.Count() != 0)
         {
             DoorInstances.RemoveAt(DoorInstances.Count-1);
         }
-        float generationX = xPos; // !!! The way the starting position is picked is going to need to be adjusted to align with the path gen and overall level gen !!! 
+        float generationX = xPos;
         float generationY = yPos;
         int playerPlace = (int)UnityEngine.Random.Range(1, roomWidth*roomLength);
         int tileCount = 0;
-        int doorCheck; // Used to randomly generate a number 
-        bool doorPlaced = false;
+        int doorCheck = 0; // Used to randomly generate a number 
         Collider2D spotCheck;
         for (int i = 0; i < roomLength; i++)
         {
             for (int j = 0; j < roomWidth; j++)
             {
-                Instantiate(tile, new UnityEngine.Vector3(generationX,generationY,0), transform.rotation);
-                doorCheck = UnityEngine.Random.Range(1,101);
-                if(j == 0 && i == (roomLength-1)/2 && startDir != "Right" && placedRooms < roomCount && (doorCheck <= doorChance || doorPlaced == false)){// Left door generation
-                    spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY));
-                    if(spotCheck == null){
-                        Instantiate(door, new UnityEngine.Vector3(generationX-1.5f,generationY,0), transform.rotation);
-                        DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX-1.5f,generationY), "Left"));
-                        doorPlaced = true;
+                spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX, generationY));
+                if(spotCheck == null){
+                    Instantiate(tile, new UnityEngine.Vector3(generationX,generationY,0), transform.rotation);
+                }
+
+                if(j == 0 && i == (int)((roomLength-1)/2) && startDir != "Right" && placedRooms < roomCount){// Left door generation
+                    doorCheck = UnityEngine.Random.Range(1,101);
+                    UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
+                    if(doorCheck <= doorChance){
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY));
+                        if(spotCheck == null){
+                            Instantiate(door, new UnityEngine.Vector3(generationX-1.5f,generationY,0), transform.rotation);
+                            DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX-1.5f,generationY), "Left", false));
+                        }
                     }
-                } else if(j == 0){// Wall generation
+                } else if(j == roomWidth-1 && i == (int)((roomLength-1)/2) && startDir != "Left" && placedRooms < roomCount){// Right door generation
+                    doorCheck = UnityEngine.Random.Range(1,101);
+                    UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
+                    if(doorCheck <= doorChance){
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX+1.5f,generationY));
+                        if(spotCheck == null){
+                            Instantiate(door, new UnityEngine.Vector3(generationX+1.5f,generationY,0), transform.rotation);
+                            DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX+1.5f,generationY), "Right", false));
+                        }
+                    }
+                } 
+                
+                if(i == 0 && j == (int)((roomWidth-1)/2) && startDir != "Down" && placedRooms < roomCount){// Top door generation
+                    doorCheck = UnityEngine.Random.Range(1,101);
+                    UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
+                    if(doorCheck <= doorChance){
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY+1.5f));
+                        if(spotCheck == null){
+                            Instantiate(door, new UnityEngine.Vector3(generationX,generationY+1.5f,0), transform.rotation);
+                            DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX,generationY+1.5f), "Up", false));
+                        }
+                    }
+                } else if(i == roomLength-1 && j == (int)((roomWidth-1)/2) && startDir != "Up" && placedRooms < roomCount){// Bottom door generation
+                    doorCheck = UnityEngine.Random.Range(1,101);
+                    UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
+                    if(doorCheck <= doorChance){
+                        spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY-1.5f));
+                        if(spotCheck == null){
+                            Instantiate(door, new UnityEngine.Vector3(generationX,generationY-1.5f,0), transform.rotation);
+                            DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX,generationY-1.5f), "Down", false));
+                        }
+                    }
+                }
+                
+                if(j == 0){// Wall generation
                     spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY));
                     // Generates wall to the left
                     if(spotCheck == null){
@@ -317,14 +410,9 @@ public class levelGeneration : MonoBehaviour
                             Instantiate(wall, new UnityEngine.Vector3(generationX-1.5f,generationY-1.5f,0), transform.rotation);
                         }
                     }
-                } else if(j == roomWidth-1 && i == (roomLength-1)/2 && startDir != "Left" && placedRooms < roomCount && (doorCheck <= doorChance || doorPlaced == false)){// Right door generation
-                    spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX+1.5f,generationY));
-                    if(spotCheck == null){
-                        Instantiate(door, new UnityEngine.Vector3(generationX+1.5f,generationY,0), transform.rotation);
-                        DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX+1.5f,generationY), "Right"));
-                        doorPlaced = true;
-                    }
-                } else if (j == roomWidth-1)
+                } 
+
+                if (j == roomWidth-1)
                 {
                     spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX+1.5f,generationY));
                     // Generates wall to the right
@@ -348,28 +436,13 @@ public class levelGeneration : MonoBehaviour
                     }
                 }
 
-                if(i == 0 && j == (roomWidth-1)/2 && startDir != "Down" && placedRooms < roomCount && (doorCheck <= doorChance || doorPlaced == false)){// Top door generation
-                    spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY+1.5f));
-                    if(spotCheck == null){
-                        Instantiate(door, new UnityEngine.Vector3(generationX,generationY+1.5f,0), transform.rotation);
-                        DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX,generationY+1.5f), "Up"));
-                        doorPlaced = true;
-                    }
-                } else if (i == 0)
+                if (i == 0)
                 {
                     spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY+1.5f));
                     if(spotCheck == null){
                         Instantiate(wall, new UnityEngine.Vector3(generationX,generationY+1.5f,0), transform.rotation);
                     }
-                } else if(i == 0 && j == (roomWidth-1)/2 && startDir != "Up" && placedRooms < roomCount && (doorCheck <= doorChance || doorPlaced == false)){// Bottom door generation
-                    spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY-1.5f));
-                    if(spotCheck == null){
-                        Instantiate(door, new UnityEngine.Vector3(generationX,generationY-1.5f,0), transform.rotation);
-                        DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX,generationY-1.5f), "Down"));
-                        doorPlaced = true;
-                    }
-                }
-                else if (i == roomLength-1)
+                } else if (i == roomLength-1)
                 {
                     spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY-1.5f));
                     if(spotCheck == null){
