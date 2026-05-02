@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D playerBody;
     private Transform camPos;
     private bool camLocked = true;
+    public bool inMenu = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     // In start, find the camera object and its transform, then put that transform into the camPos variable and change the position to hover over the player
     void Start()
@@ -22,7 +23,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Basic Movement Code, calls a function to make sure the next tile can be moved to.
-        if(Input.GetKeyDown(KeyCode.W)){
+        if(Input.GetKeyDown(KeyCode.W) && !inMenu){
             if(camLocked){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y + moveSpeed));
             }
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.A)){
+        if(Input.GetKeyDown(KeyCode.A) && !inMenu){
             if(camLocked){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y));
             }
@@ -42,7 +43,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.S)){
+        if(Input.GetKeyDown(KeyCode.S) && !inMenu){
             if(camLocked){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y - moveSpeed));
             }
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.D)){
+        if(Input.GetKeyDown(KeyCode.D) && !inMenu){
             if(camLocked){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y));
             }
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
         
         // Enables camera movement by unlocking the camera to the player. When locked off, instead of moving the player, the camera instead moves. When locked on, 
         // the camera is set to the player's position and follows the player.
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L) && !inMenu)
         {
             if (camLocked)
             {
