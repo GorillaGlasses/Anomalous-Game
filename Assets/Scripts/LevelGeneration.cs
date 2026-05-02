@@ -13,6 +13,7 @@ public class levelGeneration : MonoBehaviour
     public GameObject tile;
     public GameObject wall;
     public GameObject door;
+    public GameObject exit;
     public GameObject player;
     public int turnChance = 0;
     public int doorChance = 50;
@@ -22,6 +23,7 @@ public class levelGeneration : MonoBehaviour
     public int playerCount = 1;
     public int placedPlayers = 0;
     public bool exitRoom = false; // When true, the next roomGen will generate an exit to the floor.
+    public bool forcedDoor = true;
 
 
 
@@ -60,9 +62,20 @@ public class levelGeneration : MonoBehaviour
     {
         int roomLength = UnityEngine.Random.Range(5,15);
         int roomWidth = UnityEngine.Random.Range(5,15);
+        
         roomGen(roomLength, roomWidth, randomCoordGeneration(), randomCoordGeneration(), "Right");
-
+        
         while(placedRooms < roomCount){
+            if (placedRooms == roomCount-1)
+            {
+                exitRoom = true;
+            }
+
+            if (DoorInstances.Count() == 1)
+            {
+                forcedDoor = true;
+            }
+
             if(!DoorInstances.Last().fromPath()){
                 pathGen(UnityEngine.Random.Range(4,11), DoorInstances.Last().getLocation(), DoorInstances.Last().getDirection());
             }
@@ -98,9 +111,7 @@ public class levelGeneration : MonoBehaviour
         {
             if(!DoorInstances.Last().fromPath()){
                 pathGen(UnityEngine.Random.Range(4,11), DoorInstances.Last().getLocation(), DoorInstances.Last().getDirection());
-            }
-            
-            if(DoorInstances.Last().fromPath()){
+            }else if(DoorInstances.Last().fromPath()){
                 if(DoorInstances.Last().getDirection() == "Right")
                 {
                     roomLength = UnityEngine.Random.Range(5,15);
@@ -186,7 +197,7 @@ public class levelGeneration : MonoBehaviour
                 {
                     UnityEngine.Debug.Log("Didn't turn: " + directionChance+ "/" + turnChance);
                     workingPos = new UnityEngine.Vector2(workingPos.x + xAdjust, workingPos.y + yAdjust);
-                } else // Otherwise, turn left or right in relation to the current direction.
+                } else if(i < tileNum-1) // Otherwise, turn left or right in relation to the current direction.
                 {
                     if(xAdjust > 0) // Handles if the previous direction was going RIGHT
                     {
@@ -202,7 +213,6 @@ public class levelGeneration : MonoBehaviour
                                 yAdjust = -1.5f;
                                 break;
                         }
-                        placeAdjacentWalls(workingPos, xAdjust, yAdjust);
                     }else if (xAdjust < 0) // Handles if the previous direction was going LEFT
                     {
                         directionChance = UnityEngine.Random.Range(1,3);
@@ -217,7 +227,6 @@ public class levelGeneration : MonoBehaviour
                                 yAdjust = 1.5f;
                                 break;
                         }
-                        placeAdjacentWalls(workingPos, xAdjust, yAdjust);
                     } else if (yAdjust > 0) // Handles if the previous direction was going UP
                     {
                         directionChance = UnityEngine.Random.Range(1,3);
@@ -232,7 +241,6 @@ public class levelGeneration : MonoBehaviour
                                 yAdjust = 0;
                                 break;
                         }
-                        placeAdjacentWalls(workingPos, xAdjust, yAdjust);
                     } else if(yAdjust < 0) // Handles if the previous direction was going DOWN
                     {
                         directionChance = UnityEngine.Random.Range(1,3);
@@ -247,75 +255,33 @@ public class levelGeneration : MonoBehaviour
                                 yAdjust = 0;
                                 break;
                         }
-                        placeAdjacentWalls(workingPos, xAdjust, yAdjust);
                     }
-
+                    placeAdjacentWalls(workingPos, xAdjust, yAdjust);
                     workingPos = new UnityEngine.Vector2(workingPos.x + xAdjust, workingPos.y + yAdjust);
                     UnityEngine.Debug.Log("DID turn: " + directionChance+ "/" + turnChance + "\nXAdj: " + xAdjust + "\nYAdj: " + yAdjust);
                 }
                 
             } else // If it is not vacant, we must change positions until we are moving freely.
             {
-                i += -1;
                 workingPos = new UnityEngine.Vector2(workingPos.x - xAdjust, workingPos.y - yAdjust);
                 if(xAdjust > 0) // Handles if the previous direction was going RIGHT
                 {
-                    directionChance = UnityEngine.Random.Range(1,3);
-                    switch (directionChance)
-                    {
-                        case 1: // Going up
-                            xAdjust = 0;
-                            yAdjust = 1.5f;
-                            break;
-                        case 2: // Going down
-                            xAdjust = 0;
-                            yAdjust = -1.5f;
-                            break;
-                    }
+                    xAdjust = 0;
+                    yAdjust = -1.5f;
                 }else if (xAdjust < 0) // Handles if the previous direction was going LEFT
                 {
-                    directionChance = UnityEngine.Random.Range(1,3);
-                    switch (directionChance)
-                    {
-                        case 1: // Going down
-                            xAdjust = 0;
-                            yAdjust = -1.5f;
-                            break;
-                        case 2: // Going up
-                            xAdjust = 0;
-                            yAdjust = 1.5f;
-                            break;
-                    }
+                    xAdjust = 0;
+                    yAdjust = 1.5f;
                 } else if (yAdjust > 0) // Handles if the previous direction was going UP
                 {
-                    directionChance = UnityEngine.Random.Range(1,3);
-                    switch (directionChance)
-                    {
-                        case 1: // Going left
-                            xAdjust = -1.5f;
-                            yAdjust = 0;
-                            break;
-                        case 2: // Going right
-                            xAdjust = 1.5f;
-                            yAdjust = 0;
-                            break;
-                    }
+                    xAdjust = 1.5f;
+                    yAdjust = 0;
                 } else if(yAdjust < 0) // Handles if the previous direction was going DOWN
                 {
-                    directionChance = UnityEngine.Random.Range(1,3);
-                    switch (directionChance)
-                    {
-                        case 1: // Going right
-                            xAdjust = 1.5f;
-                            yAdjust = 0;
-                            break;
-                        case 2: // Going left
-                            xAdjust = -1.5f;
-                            yAdjust = 0;
-                            break;
-                    }
+                    xAdjust = -1.5f;
+                    yAdjust = 0;
                 }
-
+                placeAdjacentWalls(workingPos, xAdjust, yAdjust);
                 workingPos = new UnityEngine.Vector2(workingPos.x + xAdjust, workingPos.y + yAdjust);
             }
             spotCheck = Physics2D.OverlapPoint(workingPos);
@@ -333,8 +299,9 @@ public class levelGeneration : MonoBehaviour
         float generationX = xPos;
         float generationY = yPos;
         int playerPlace = (int)UnityEngine.Random.Range(1, roomWidth*roomLength);
+        int exitPlace = (int)UnityEngine.Random.Range(1, roomWidth*roomLength);
         int tileCount = 0;
-        int doorCheck = 0; // Used to randomly generate a number 
+        int doorCheck = 0; // Used to randomly generate a number inside the loop
         Collider2D spotCheck;
         for (int i = 0; i < roomLength; i++)
         {
@@ -342,50 +309,60 @@ public class levelGeneration : MonoBehaviour
             {
                 spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX, generationY));
                 if(spotCheck == null){
-                    Instantiate(tile, new UnityEngine.Vector3(generationX,generationY,0), transform.rotation);
+                    if(!exitRoom || exitPlace != tileCount){
+                        Instantiate(tile, new UnityEngine.Vector3(generationX,generationY,0), transform.rotation);
+                    } else
+                    {
+                        Instantiate(exit, new UnityEngine.Vector3(generationX,generationY,0), transform.rotation);
+                        exitRoom = false;
+                    }
                 }
 
                 if(j == 0 && i == (int)((roomLength-1)/2) && startDir != "Right" && placedRooms < roomCount){// Left door generation
                     doorCheck = UnityEngine.Random.Range(1,101);
                     UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
-                    if(doorCheck <= doorChance){
+                    if(doorCheck <= doorChance || forcedDoor){
                         spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY));
                         if(spotCheck == null){
                             Instantiate(door, new UnityEngine.Vector3(generationX-1.5f,generationY,0), transform.rotation);
                             DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX-1.5f,generationY), "Left", false));
                         }
+                        forcedDoor = false;
                     }
                 } else if(j == roomWidth-1 && i == (int)((roomLength-1)/2) && startDir != "Left" && placedRooms < roomCount){// Right door generation
                     doorCheck = UnityEngine.Random.Range(1,101);
                     UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
-                    if(doorCheck <= doorChance){
+                    if(doorCheck <= doorChance || forcedDoor){
                         spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX+1.5f,generationY));
                         if(spotCheck == null){
                             Instantiate(door, new UnityEngine.Vector3(generationX+1.5f,generationY,0), transform.rotation);
                             DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX+1.5f,generationY), "Right", false));
                         }
+                        forcedDoor = false;
                     }
                 } 
                 
                 if(i == 0 && j == (int)((roomWidth-1)/2) && startDir != "Down" && placedRooms < roomCount){// Top door generation
                     doorCheck = UnityEngine.Random.Range(1,101);
                     UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
-                    if(doorCheck <= doorChance){
+                    if(doorCheck <= doorChance || forcedDoor){
                         spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY+1.5f));
                         if(spotCheck == null){
                             Instantiate(door, new UnityEngine.Vector3(generationX,generationY+1.5f,0), transform.rotation);
                             DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX,generationY+1.5f), "Up", false));
                         }
+                        forcedDoor = false;
                     }
                 } else if(i == roomLength-1 && j == (int)((roomWidth-1)/2) && startDir != "Up" && placedRooms < roomCount){// Bottom door generation
                     doorCheck = UnityEngine.Random.Range(1,101);
                     UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
-                    if(doorCheck <= doorChance){
+                    if(doorCheck <= doorChance || forcedDoor){
                         spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY-1.5f));
                         if(spotCheck == null){
                             Instantiate(door, new UnityEngine.Vector3(generationX,generationY-1.5f,0), transform.rotation);
                             DoorInstances.Add(new DoorInstance(new UnityEngine.Vector2(generationX,generationY-1.5f), "Down", false));
                         }
+                        forcedDoor = false;
                     }
                 }
                 
