@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 192064945}
   m_Layer: 0
   m_Name: Level Generator
-  m_TagString: Untagged
+  m_TagString: LevelGen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -160,6 +160,7 @@ MonoBehaviour:
   placedRooms: 0
   playerCount: 1
   placedPlayers: 0
+  placedEnemies: 0
   exitRoom: 0
   forcedDoor: 1
 --- !u!4 &192064946
@@ -285,6 +286,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f6d8cc1fa50afd4a8fa621e853bb04f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnCount: 0
+  playerTurn: 1
+  finishedEnemies: 0
+  playerStats: {fileID: 0}
+  levelStats: {fileID: 0}
 --- !u!4 &872284259
 Transform:
   m_ObjectHideFlags: 0

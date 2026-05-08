@@ -3,17 +3,32 @@ using UnityEngine;
 public class TurnManagement : MonoBehaviour
 {
     public int turnCount = 0;
-    public int actionCount = 0;
+    public bool playerTurn = true;
+    public int finishedEnemies = 0;
+    public PlayerController playerStats;
+    public LevelGeneration levelStats;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        levelStats = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<LevelGeneration>();
         UnityEngine.Debug.Log("Turn " + turnCount);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (playerTurn && playerStats.actionCount <= 100)
+        {
+            turnCount++;
+            UnityEngine.Debug.Log("Turn " + turnCount);
+            playerTurn = false;
+        }
+
+        if (!playerTurn && levelStats.placedEnemies == finishedEnemies)
+        {
+            playerTurn = true;
+        }
     }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - BaseTile
   - LevelComplete
+  - LevelGen
   layers:
   - Default
   - TransparentFX
