@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class levelGeneration : MonoBehaviour
+public class LevelGeneration : MonoBehaviour
 {
     public GameObject tile;
     public GameObject wall;
@@ -22,6 +22,7 @@ public class levelGeneration : MonoBehaviour
     public int placedRooms = 0;
     public int playerCount = 1;
     public int placedPlayers = 0;
+    public int placedEnemies = 0;
     public bool exitRoom = false; // When true, the next roomGen will generate an exit to the floor.
     public bool forcedDoor = true;
 
@@ -440,6 +441,11 @@ public class levelGeneration : MonoBehaviour
             generationY += -1.5f;
         }
         placedRooms += 1;
+    }
+
+    void enemyGen()
+    {
+        
     }
     
     // Generates a coordinate randomly within the range of -60 to 60.

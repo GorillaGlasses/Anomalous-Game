@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 1.5f;
+    public int actionCount = 0;
     public Rigidbody2D playerBody;
     private Transform camPos;
     private bool camLocked = true;
