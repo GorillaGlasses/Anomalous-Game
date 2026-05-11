@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     // In start, find the camera object and its transform, then put that transform into the camPos variable and change the position to hover over the player
     void Start()
     {
-        GameObject.FindGameObjectWithTag("MainCamera").TryGetComponent<Transform>(out Transform camForm);
+        GameObject.FindGameObjectWithTag("MainCamera").TryGetComponent<Transform>(out Transform camForm);        
         camPos = camForm;
         camPos.position = new UnityEngine.Vector3(playerBody.position.x, playerBody.position.y, -10);
     }
@@ -90,9 +90,11 @@ public class PlayerController : MonoBehaviour
         {
             playerBody.position = targetSpot;
             camPos.position = new UnityEngine.Vector3(targetSpot.x, targetSpot.y, -10);
+            actionCount += 100;
         } else if (spotCheck.gameObject.TryGetComponent<DoorOpening>(out DoorOpening dOpen))
         {
             dOpen.useDoor();
+            actionCount += 100;
         }
         return;
     }

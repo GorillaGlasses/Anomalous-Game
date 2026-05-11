@@ -153,6 +153,7 @@ MonoBehaviour:
   door: {fileID: 2853878609269654612, guid: a3f4ed0d445939844b4a6f9bfbd8d5fa, type: 3}
   exit: {fileID: 8584350366673946418, guid: c9763dc2e3c62424b91aabbea26cf169, type: 3}
   player: {fileID: 5998469897853359155, guid: 5790ed77430a4a24d912ca53c85d2b0c, type: 3}
+  enemy: {fileID: 7838214675997129251, guid: a7903630e6ca554468bbb62e01ad2b03, type: 3}
   turnChance: 0
   doorChance: 50
   gridInterval: 1.5
@@ -269,7 +270,7 @@ GameObject:
   - component: {fileID: 872284258}
   m_Layer: 0
   m_Name: TurnManager
-  m_TagString: Untagged
+  m_TagString: TurnManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -671,7 +672,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 800, y: 370}
+  m_SizeDelta: {x: 800, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1313306538
 MonoBehaviour:
