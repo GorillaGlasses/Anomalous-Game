@@ -15,6 +15,7 @@ public class LevelGeneration : MonoBehaviour
     public GameObject door;
     public GameObject exit;
     public GameObject player;
+    public GameObject enemy;
     public int turnChance = 0;
     public int doorChance = 50;
     public float gridInterval = 1.5f;
@@ -300,9 +301,28 @@ public class LevelGeneration : MonoBehaviour
         float generationX = xPos;
         float generationY = yPos;
         int playerPlace = (int)UnityEngine.Random.Range(1, roomWidth*roomLength);
+        int enemyPlace = (int)UnityEngine.Random.Range(1, (roomWidth*roomLength)-3);
         int exitPlace = (int)UnityEngine.Random.Range(1, roomWidth*roomLength);
         int tileCount = 0;
-        int doorCheck = 0; // Used to randomly generate a number inside the loop
+        int enemyCount = 0;
+        int roomEnemies = 0;
+        int chanceCheck = 0; // Used to randomly generate a number inside the loop
+        //Decides randomly how many enemies are in this room, so long as it isn't the first room.
+        if (placedRooms > 0)
+        {
+            chanceCheck = UnityEngine.Random.Range(1,101);
+            if (chanceCheck <= 20)
+            {
+                roomEnemies = 3;
+            } else if (chanceCheck <= 40)
+            {
+                roomEnemies = 2;
+            } else if (chanceCheck <= 80)
+            {
+                roomEnemies = 1;
+            }
+        }
+
         Collider2D spotCheck;
         for (int i = 0; i < roomLength; i++)
         {
@@ -320,9 +340,9 @@ public class LevelGeneration : MonoBehaviour
                 }
 
                 if(j == 0 && i == (int)((roomLength-1)/2) && startDir != "Right" && placedRooms < roomCount){// Left door generation
-                    doorCheck = UnityEngine.Random.Range(1,101);
-                    UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
-                    if(doorCheck <= doorChance || forcedDoor){
+                    chanceCheck = UnityEngine.Random.Range(1,101);
+                    UnityEngine.Debug.Log("Door Chance is: " + chanceCheck + "/" + doorChance);
+                    if(chanceCheck <= doorChance || forcedDoor){
                         spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX-1.5f,generationY));
                         if(spotCheck == null){
                             Instantiate(door, new UnityEngine.Vector3(generationX-1.5f,generationY,0), transform.rotation);
@@ -331,9 +351,9 @@ public class LevelGeneration : MonoBehaviour
                         forcedDoor = false;
                     }
                 } else if(j == roomWidth-1 && i == (int)((roomLength-1)/2) && startDir != "Left" && placedRooms < roomCount){// Right door generation
-                    doorCheck = UnityEngine.Random.Range(1,101);
-                    UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
-                    if(doorCheck <= doorChance || forcedDoor){
+                    chanceCheck = UnityEngine.Random.Range(1,101);
+                    UnityEngine.Debug.Log("Door Chance is: " + chanceCheck + "/" + doorChance);
+                    if(chanceCheck <= doorChance || forcedDoor){
                         spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX+1.5f,generationY));
                         if(spotCheck == null){
                             Instantiate(door, new UnityEngine.Vector3(generationX+1.5f,generationY,0), transform.rotation);
@@ -344,9 +364,9 @@ public class LevelGeneration : MonoBehaviour
                 } 
                 
                 if(i == 0 && j == (int)((roomWidth-1)/2) && startDir != "Down" && placedRooms < roomCount){// Top door generation
-                    doorCheck = UnityEngine.Random.Range(1,101);
-                    UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
-                    if(doorCheck <= doorChance || forcedDoor){
+                    chanceCheck = UnityEngine.Random.Range(1,101);
+                    UnityEngine.Debug.Log("Door Chance is: " + chanceCheck + "/" + doorChance);
+                    if(chanceCheck <= doorChance || forcedDoor){
                         spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY+1.5f));
                         if(spotCheck == null){
                             Instantiate(door, new UnityEngine.Vector3(generationX,generationY+1.5f,0), transform.rotation);
@@ -355,9 +375,9 @@ public class LevelGeneration : MonoBehaviour
                         forcedDoor = false;
                     }
                 } else if(i == roomLength-1 && j == (int)((roomWidth-1)/2) && startDir != "Up" && placedRooms < roomCount){// Bottom door generation
-                    doorCheck = UnityEngine.Random.Range(1,101);
-                    UnityEngine.Debug.Log("Door Chance is: " + doorCheck + "/" + doorChance);
-                    if(doorCheck <= doorChance || forcedDoor){
+                    chanceCheck = UnityEngine.Random.Range(1,101);
+                    UnityEngine.Debug.Log("Door Chance is: " + chanceCheck + "/" + doorChance);
+                    if(chanceCheck <= doorChance || forcedDoor){
                         spotCheck = Physics2D.OverlapPoint(new UnityEngine.Vector2(generationX,generationY-1.5f));
                         if(spotCheck == null){
                             Instantiate(door, new UnityEngine.Vector3(generationX,generationY-1.5f,0), transform.rotation);
@@ -434,6 +454,18 @@ public class LevelGeneration : MonoBehaviour
                     Instantiate(player, new UnityEngine.Vector3(generationX,generationY,0), transform.rotation);
                     placedPlayers += 1;
                 }
+                
+                if (roomEnemies > 0 && tileCount == enemyPlace)
+                {
+                    Instantiate(enemy, new UnityEngine.Vector3(generationX,generationY,0), transform.rotation);
+                    placedEnemies += 1;
+                    enemyCount += 1;
+                    if (enemyCount < roomEnemies)
+                    {
+                        enemyPlace = (int)UnityEngine.Random.Range(tileCount+1, (roomWidth*roomLength)-(3-enemyCount));
+                    }
+                }
+
                 generationX += 1.5f;
             }
             // Moves down one row and back to the first column.
@@ -441,11 +473,6 @@ public class LevelGeneration : MonoBehaviour
             generationY += -1.5f;
         }
         placedRooms += 1;
-    }
-
-    void enemyGen()
-    {
-        
     }
     
     // Generates a coordinate randomly within the range of -60 to 60.

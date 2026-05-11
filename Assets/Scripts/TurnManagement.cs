@@ -19,10 +19,11 @@ public class TurnManagement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerTurn && playerStats.actionCount <= 100)
+        if (playerTurn && playerStats.actionCount >= 100)
         {
             turnCount++;
             UnityEngine.Debug.Log("Turn " + turnCount);
+            playerStats.actionCount = 0;
             playerTurn = false;
         }
 

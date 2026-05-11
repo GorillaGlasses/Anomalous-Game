@@ -7,6 +7,8 @@ TagManager:
   - BaseTile
   - LevelComplete
   - LevelGen
+  - TurnManager
+  - Enemy
   layers:
   - Default
   - TransparentFX
