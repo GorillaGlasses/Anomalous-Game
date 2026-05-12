@@ -175,3 +175,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b186640379bddb94ab29b4b5eb4b2b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sightRadius: 5
+  turnManager: {fileID: 0}
+  enemyBody: {fileID: -5637245143801637859}
+  targetLocation: {x: 0, y: 0}
+  adjacentTiles: []
