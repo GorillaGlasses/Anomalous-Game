@@ -30,6 +30,7 @@ public class TurnManagement : MonoBehaviour
         if (!playerTurn && levelStats.placedEnemies == finishedEnemies)
         {
             playerTurn = true;
+            finishedEnemies = 0;
         }
     }
 }
