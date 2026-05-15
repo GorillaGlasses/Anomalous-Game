@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class TurnManagement : MonoBehaviour
@@ -7,6 +8,7 @@ public class TurnManagement : MonoBehaviour
     public int finishedEnemies = 0;
     public PlayerController playerStats;
     public LevelGeneration levelStats;
+    public GameObject turnCounter;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,7 +24,7 @@ public class TurnManagement : MonoBehaviour
         if (playerTurn && playerStats.actionCount >= 100)
         {
             turnCount++;
-            UnityEngine.Debug.Log("Turn " + turnCount);
+            turnCounter.GetComponent<TextMeshProUGUI>().text = "Turn " + turnCount;
             playerStats.actionCount = 0;
             playerTurn = false;
         }

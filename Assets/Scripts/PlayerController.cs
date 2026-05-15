@@ -8,9 +8,11 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 1.5f;
     public int actionCount = 0;
     public Rigidbody2D playerBody;
+    public StatBlock playerStats;
     private Transform camPos;
     private bool camLocked = true;
     public bool inMenu = false;
+    public bool finishedLevel = false;
     public TurnManagement turnManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     // In start, find the camera object and its transform, then put that transform into the camPos variable and change the position to hover over the player
@@ -26,7 +28,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Basic Movement Code, calls a function to make sure the next tile can be moved to.
-        if(Input.GetKeyDown(KeyCode.W) && !inMenu && turnManager.playerTurn){
+        if(Input.GetKeyDown(KeyCode.W) && !inMenu && turnManager.playerTurn && !finishedLevel){
             if(camLocked){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y + moveSpeed));
             }
@@ -36,7 +38,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.A) && !inMenu && turnManager.playerTurn){
+        if(Input.GetKeyDown(KeyCode.A) && !inMenu && turnManager.playerTurn && !finishedLevel){
             if(camLocked){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y));
             }
@@ -46,7 +48,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.S) && !inMenu && turnManager.playerTurn){
+        if(Input.GetKeyDown(KeyCode.S) && !inMenu && turnManager.playerTurn && !finishedLevel){
             if(camLocked){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y - moveSpeed));
             }
@@ -56,7 +58,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.D) && !inMenu && turnManager.playerTurn){
+        if(Input.GetKeyDown(KeyCode.D) && !inMenu && turnManager.playerTurn && !finishedLevel){
             if(camLocked){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y));
             }
@@ -66,9 +68,57 @@ public class PlayerController : MonoBehaviour
             }
         }
         
+        // Diagonal movement
+        if(Input.GetKeyDown(KeyCode.E) && !inMenu && turnManager.playerTurn && !finishedLevel){
+            if(camLocked){
+                checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y + moveSpeed));
+            }
+            else
+            {
+                camPos.position = new UnityEngine.Vector3(camPos.position.x + moveSpeed, camPos.position.y + moveSpeed, -10);
+            }
+        }
+
+        if(Input.GetKeyDown(KeyCode.Q) && !inMenu && turnManager.playerTurn && !finishedLevel){
+            if(camLocked){
+                checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y + moveSpeed));
+            }
+            else
+            {
+                camPos.position = new UnityEngine.Vector3(camPos.position.x - moveSpeed, camPos.position.y + moveSpeed, -10);
+            }
+        }
+
+        if(Input.GetKeyDown(KeyCode.Z) && !inMenu && turnManager.playerTurn && !finishedLevel){
+            if(camLocked){
+                checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y - moveSpeed));
+            }
+            else
+            {
+                camPos.position = new UnityEngine.Vector3(camPos.position.x - moveSpeed, camPos.position.y - moveSpeed, -10);
+            }
+        }
+
+        if(Input.GetKeyDown(KeyCode.C) && !inMenu && turnManager.playerTurn && !finishedLevel){
+            if(camLocked){
+                checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y - moveSpeed));
+            }
+            else
+            {
+                camPos.position = new UnityEngine.Vector3(camPos.position.x + moveSpeed, camPos.position.y - moveSpeed, -10);
+            }
+        }
+
+        // Input for waiting, immedietly ends player turn
+        if (Input.GetKeyDown(KeyCode.Space) && !inMenu && turnManager.playerTurn && !finishedLevel)
+        {
+            actionCount += 100;
+        }
+
+
         // Enables camera movement by unlocking the camera to the player. When locked off, instead of moving the player, the camera instead moves. When locked on, 
         // the camera is set to the player's position and follows the player.
-        if (Input.GetKeyDown(KeyCode.L) && !inMenu && turnManager.playerTurn)
+        if (Input.GetKeyDown(KeyCode.L) && !inMenu && turnManager.playerTurn && !finishedLevel)
         {
             if (camLocked)
             {
@@ -97,6 +147,18 @@ public class PlayerController : MonoBehaviour
         {
             dOpen.useDoor();
             actionCount += 100;
+        } else if (spotCheck.gameObject.TryGetComponent<StatBlock>(out StatBlock enemy))
+        {
+            if (UnityEngine.Random.Range(1, 21) + playerStats.strength >= enemy.defense)
+            {
+                int damage = UnityEngine.Random.Range(1, 5) + playerStats.strength;
+                enemy.health -= damage;
+                playerStats.combatLog.text += playerStats.charName + " hits " + enemy.charName + " for " + damage + " damage!\n";
+                actionCount += 100;
+            } else {
+                playerStats.combatLog.text += playerStats.charName + " misses " + enemy.charName + "!\n";
+                actionCount += 100;
+            }
         }
         return;
     }
