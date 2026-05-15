@@ -12,6 +12,7 @@ public class EnemyBehavior : MonoBehaviour
     public UnityEngine.Vector2 targetLocation;
     public List<UnityEngine.Vector2> adjacentTiles = new List<UnityEngine.Vector2>();
     public bool takenTurn = false;
+    public StatBlock enemyStats;
     void Start()
     {
         turnManager = GameObject.FindGameObjectWithTag("TurnManager").GetComponent<TurnManagement>();
@@ -76,45 +77,25 @@ public class EnemyBehavior : MonoBehaviour
     // Checks all tiles adjacent to the enemy for vacancy, adding their position to the list of adjacent tiles if they are open. This is used in the pathfinding algorithm to determine which tiles the enemy can move to.
     void checkAdjacentTiles(UnityEngine.Vector2 startingPoint)
     {
-        Collider2D spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x-1.5f, startingPoint.y+1.5f));
-        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out TileVacancy tVac) && tVac.occupant == null) // Checks the tile in the top left of the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
-        {
-            adjacentTiles.Add(new UnityEngine.Vector2(startingPoint.x-1.5f, startingPoint.y+1.5f));
-        }
-        spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x, startingPoint.y+1.5f));
-        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) // Checks the tile directly above the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
+        Collider2D spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x, startingPoint.y+1.5f));
+        if ((spotCheck.gameObject.TryGetComponent<TileVacancy>(out TileVacancy tVac) && tVac.occupant == null) || spotCheck.gameObject.TryGetComponent<StatBlock>(out StatBlock player)) // Checks the tile directly above the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
         {
             adjacentTiles.Add(new UnityEngine.Vector2(startingPoint.x, startingPoint.y+1.5f));
         }
-        spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x+1.5f, startingPoint.y+1.5f)); 
-        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) // Checks the tile in the top right of the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
-        {
-            adjacentTiles.Add(new UnityEngine.Vector2(startingPoint.x+1.5f, startingPoint.y+1.5f));
-        }
         spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x-1.5f, startingPoint.y));
-        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) // Checks the tile directly to the left of the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
+        if ((spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) || spotCheck.gameObject.TryGetComponent<StatBlock>(out player)) // Checks the tile directly to the left of the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
         {
             adjacentTiles.Add(new UnityEngine.Vector2(startingPoint.x-1.5f, startingPoint.y));
         }
         spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x+1.5f, startingPoint.y));
-        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) // Checks the tile directly to the right of the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
+        if ((spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) || spotCheck.gameObject.TryGetComponent<StatBlock>(out player)) // Checks the tile directly to the right of the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
         {
             adjacentTiles.Add(new UnityEngine.Vector2(startingPoint.x+1.5f, startingPoint.y));
         }
-        spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x-1.5f, startingPoint.y-1.5f));
-        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) // Checks the tile in the bottom left of the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
-        {
-            adjacentTiles.Add(new UnityEngine.Vector2(startingPoint.x-1.5f, startingPoint.y-1.5f));
-        }
         spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x, startingPoint.y-1.5f));
-        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) // Checks the tile directly below the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
+        if ((spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) || spotCheck.gameObject.TryGetComponent<StatBlock>(out player)) // Checks the tile directly below the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
         {
             adjacentTiles.Add(new UnityEngine.Vector2(startingPoint.x, startingPoint.y-1.5f));
-        }
-        spotCheck = Physics2D.OverlapPoint(new Vector2(startingPoint.x+1.5f, startingPoint.y-1.5f));
-        if (spotCheck.gameObject.TryGetComponent<TileVacancy>(out tVac) && tVac.occupant == null) // Checks the tile in the bottom right of the enemy, and if it is unoccupied, adds it to the list of adjacent tiles.
-        {
-            adjacentTiles.Add(new UnityEngine.Vector2(startingPoint.x+1.5f, startingPoint.y-1.5f));
         }
     }
 
@@ -149,10 +130,20 @@ public class EnemyBehavior : MonoBehaviour
             enemyBody.position = targetSpot;
             turnManager.finishedEnemies++;
             takenTurn = true;
-        }else
-        {
-            turnManager.finishedEnemies++;
-            takenTurn = true;
+        }
+        else if(spotCheck.gameObject.TryGetComponent<StatBlock>(out StatBlock player)){
+            if (UnityEngine.Random.Range(1, 21) + enemyStats.strength >= player.defense)
+            {
+                int damage = UnityEngine.Random.Range(1, 5) + enemyStats.strength;
+                player.health -= damage;
+                enemyStats.combatLog.text += enemyStats.charName + " hits " + player.charName + " for " + damage + " damage!\n";
+                turnManager.finishedEnemies++;
+                takenTurn = true;
+            } else {
+                enemyStats.combatLog.text += enemyStats.charName + " misses " + player.charName + "!\n";
+                turnManager.finishedEnemies++;
+                takenTurn = true;
+            }
         }
         return;
     }

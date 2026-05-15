@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2747519329746037986}
   - component: {fileID: -5637245143801637859}
   - component: {fileID: 8430001196064139351}
+  - component: {fileID: 3484371819497008364}
   m_Layer: 0
   m_Name: BasicEnemy
   m_TagString: Enemy
@@ -180,3 +181,27 @@ MonoBehaviour:
   enemyBody: {fileID: -5637245143801637859}
   targetLocation: {x: 0, y: 0}
   adjacentTiles: []
+  takenTurn: 0
+  enemyStats: {fileID: 3484371819497008364}
+--- !u!114 &3484371819497008364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7838214675997129251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 444d9a388492c224497b20a707fe4424, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charName: Goblin
+  health: 4
+  maxHealth: 4
+  strength: 1
+  dexterity: 1
+  constitution: 1
+  defense: 11
+  isPlayer: 0
+  combatLog: {fileID: 0}
+  healthMeter: {fileID: 0}
