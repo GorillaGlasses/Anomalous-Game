@@ -62662,6 +62662,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2663407707544428487, guid: b7bfc6df3c51fbe4a8ba0e6d841166ba, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: PreMadeDungeon
+      objectReference: {fileID: 0}
     - target: {fileID: 4558378113560721240, guid: b7bfc6df3c51fbe4a8ba0e6d841166ba, type: 3}
       propertyPath: m_Name
       value: Canvas
