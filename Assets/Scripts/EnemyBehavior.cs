@@ -131,7 +131,7 @@ public class EnemyBehavior : MonoBehaviour
             turnManager.finishedEnemies++;
             takenTurn = true;
         }
-        else if(spotCheck.gameObject.TryGetComponent<StatBlock>(out StatBlock player)){
+        else if(spotCheck.gameObject.TryGetComponent<StatBlock>(out StatBlock player) && player.isPlayer){
             if (UnityEngine.Random.Range(1, 21) + enemyStats.strength >= player.defense)
             {
                 int damage = UnityEngine.Random.Range(1, 5) + enemyStats.strength;
@@ -144,6 +144,9 @@ public class EnemyBehavior : MonoBehaviour
                 turnManager.finishedEnemies++;
                 takenTurn = true;
             }
+        } else {
+            turnManager.finishedEnemies++;
+            takenTurn = true;
         }
         return;
     }

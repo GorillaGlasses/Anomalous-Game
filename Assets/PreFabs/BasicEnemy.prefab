@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b186640379bddb94ab29b4b5eb4b2b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRadius: 5
+  sightRadius: 10
   turnManager: {fileID: 0}
   enemyBody: {fileID: -5637245143801637859}
   targetLocation: {x: 0, y: 0}
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 444d9a388492c224497b20a707fe4424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charName: Goblin
+  charName: Bandit
   health: 4
   maxHealth: 4
   strength: 1
@@ -205,3 +205,7 @@ MonoBehaviour:
   isPlayer: 0
   combatLog: {fileID: 0}
   healthMeter: {fileID: 0}
+  levelStats: {fileID: 0}
+  levelMenu: {fileID: 0}
+  HUD: {fileID: 0}
+  playerStats: {fileID: 11400000, guid: 742c11293c0f61145af105d88b81656c, type: 2}

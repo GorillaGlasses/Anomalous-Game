@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class LevelGeneration : MonoBehaviour
@@ -65,8 +65,10 @@ public class LevelGeneration : MonoBehaviour
         int roomLength = UnityEngine.Random.Range(5,15);
         int roomWidth = UnityEngine.Random.Range(5,15);
         
-        roomGen(roomLength, roomWidth, randomCoordGeneration(), randomCoordGeneration(), "Right");
-        
+        if(roomCount > 0){
+            roomGen(roomLength, roomWidth, randomCoordGeneration(), randomCoordGeneration(), "Right");
+        }
+
         while(placedRooms < roomCount){
             if (placedRooms == roomCount-1)
             {

@@ -77,8 +77,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1393360437
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 4149366288073232659, guid: 2db647bf55dbe87488fc67b1fae32504, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -164,7 +164,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileVac: {fileID: 938874295284711500}
   openDoor: {fileID: 1078037782814291976}
-  closedDoor: {fileID: 3273089503831961719}
 --- !u!1 &3181244336688433895
 GameObject:
   m_ObjectHideFlags: 0

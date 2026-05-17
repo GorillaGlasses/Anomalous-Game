@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public StatBlock playerStats;
     private Transform camPos;
     private bool camLocked = true;
+    public bool useMode = false;
     public bool inMenu = false;
     public bool finishedLevel = false;
     public TurnManagement turnManager;
@@ -29,8 +30,11 @@ public class PlayerController : MonoBehaviour
     {
         // Basic Movement Code, calls a function to make sure the next tile can be moved to.
         if(Input.GetKeyDown(KeyCode.W) && !inMenu && turnManager.playerTurn && !finishedLevel){
-            if(camLocked){
+            if(camLocked && !useMode){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y + moveSpeed));
+            }else if (useMode)
+            {
+                useObject(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y + moveSpeed));
             }
             else
             {
@@ -39,8 +43,11 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKeyDown(KeyCode.A) && !inMenu && turnManager.playerTurn && !finishedLevel){
-            if(camLocked){
+            if(camLocked && !useMode){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y));
+            }
+            else if (useMode)            {
+                useObject(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y));
             }
             else
             {
@@ -49,8 +56,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKeyDown(KeyCode.S) && !inMenu && turnManager.playerTurn && !finishedLevel){
-            if(camLocked){
+            if(camLocked && !useMode){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y - moveSpeed));
+            }
+            else if (useMode)
+            {
+                useObject(new UnityEngine.Vector2(playerBody.position.x, playerBody.position.y - moveSpeed));
             }
             else
             {
@@ -59,8 +70,11 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKeyDown(KeyCode.D) && !inMenu && turnManager.playerTurn && !finishedLevel){
-            if(camLocked){
+            if(camLocked && !useMode){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y));
+            }
+            else if (useMode)            {
+                useObject(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y));
             }
             else
             {
@@ -70,8 +84,11 @@ public class PlayerController : MonoBehaviour
         
         // Diagonal movement
         if(Input.GetKeyDown(KeyCode.E) && !inMenu && turnManager.playerTurn && !finishedLevel){
-            if(camLocked){
+            if(camLocked && !useMode){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y + moveSpeed));
+            }
+            else if (useMode)            {
+                useObject(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y + moveSpeed));
             }
             else
             {
@@ -80,8 +97,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKeyDown(KeyCode.Q) && !inMenu && turnManager.playerTurn && !finishedLevel){
-            if(camLocked){
+            if(camLocked && !useMode){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y + moveSpeed));
+            }
+            else if (useMode)
+            {
+                useObject(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y + moveSpeed));
             }
             else
             {
@@ -90,8 +111,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKeyDown(KeyCode.Z) && !inMenu && turnManager.playerTurn && !finishedLevel){
-            if(camLocked){
+            if(camLocked && !useMode){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y - moveSpeed));
+            }
+            else if (useMode)
+            {
+                useObject(new UnityEngine.Vector2(playerBody.position.x - moveSpeed, playerBody.position.y - moveSpeed));
             }
             else
             {
@@ -100,8 +125,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKeyDown(KeyCode.C) && !inMenu && turnManager.playerTurn && !finishedLevel){
-            if(camLocked){
+            if(camLocked && !useMode){
                 checkDestinationEmpty(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y - moveSpeed));
+            }
+            else if (useMode)
+            {
+                useObject(new UnityEngine.Vector2(playerBody.position.x + moveSpeed, playerBody.position.y - moveSpeed));
             }
             else
             {
@@ -115,6 +144,17 @@ public class PlayerController : MonoBehaviour
             actionCount += 100;
         }
 
+        // Input for using doors or other items
+        if (Input.GetKeyDown(KeyCode.F) && !inMenu && turnManager.playerTurn && !finishedLevel)
+        {
+            if (!useMode)
+            {
+                useMode = true;  
+            } else
+            {
+                useMode = false;
+            }
+        }
 
         // Enables camera movement by unlocking the camera to the player. When locked off, instead of moving the player, the camera instead moves. When locked on, 
         // the camera is set to the player's position and follows the player.
@@ -159,6 +199,20 @@ public class PlayerController : MonoBehaviour
                 playerStats.combatLog.text += playerStats.charName + " misses " + enemy.charName + "!\n";
                 actionCount += 100;
             }
+        }
+        return;
+    }
+
+    void useObject(UnityEngine.Vector2 direction)
+    {
+        UnityEngine.Vector2 targetSpot = direction; 
+        Collider2D spotCheck = Physics2D.OverlapPoint(targetSpot);
+
+        if (spotCheck.gameObject.TryGetComponent<DoorOpening>(out DoorOpening dOpen))
+        {
+            dOpen.useDoor();
+            actionCount += 100;
+            useMode = false;
         }
         return;
     }

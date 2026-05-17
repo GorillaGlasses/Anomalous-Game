@@ -18,6 +18,7 @@ public class StatBlock : MonoBehaviour
     public LevelGeneration levelStats;
     public MenuManager levelMenu;
     public MenuManager HUD;
+    public PlayerStatsScriptableObject playerStats;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,6 +29,12 @@ public class StatBlock : MonoBehaviour
         HUD = GameObject.FindGameObjectWithTag("HUD").GetComponent<MenuManager>();
         if (isPlayer)
         {
+            strength = playerStats.strength;
+            dexterity = playerStats.dexterity;
+            constitution = playerStats.constitution;
+            defense = 10 + dexterity;
+            health = 8 + constitution * 2;
+            maxHealth = health;
             healthMeter = GameObject.FindGameObjectWithTag("HealthMeter").GetComponent<TextMeshProUGUI>();
             healthMeter.text = "HP: " + health + "/" + maxHealth;
         }

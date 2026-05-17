@@ -108,6 +108,7 @@ MonoBehaviour:
   playerBody: {fileID: 8258392503458459546}
   playerStats: {fileID: -3412067074341091367}
   inMenu: 0
+  finishedLevel: 0
   turnManager: {fileID: 0}
 --- !u!61 &2162779396576721387
 BoxCollider2D:
@@ -204,3 +205,7 @@ MonoBehaviour:
   isPlayer: 1
   combatLog: {fileID: 0}
   healthMeter: {fileID: 0}
+  levelStats: {fileID: 0}
+  levelMenu: {fileID: 0}
+  HUD: {fileID: 0}
+  playerStats: {fileID: 11400000, guid: 742c11293c0f61145af105d88b81656c, type: 2}

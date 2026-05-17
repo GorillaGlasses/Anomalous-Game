@@ -13,7 +13,7 @@ public class TurnManagement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        finishedEnemies = 0;
         levelStats = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<LevelGeneration>();
         UnityEngine.Debug.Log("Turn " + turnCount);
     }
@@ -21,6 +21,12 @@ public class TurnManagement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!playerStats || !levelStats)
+        {
+            playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            levelStats = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<LevelGeneration>();
+        }
+
         if (playerTurn && playerStats.actionCount >= 100)
         {
             turnCount++;
@@ -29,7 +35,7 @@ public class TurnManagement : MonoBehaviour
             playerTurn = false;
         }
 
-        if (!playerTurn && levelStats.placedEnemies == finishedEnemies)
+        if (!playerTurn && levelStats.placedEnemies <= finishedEnemies)
         {
             playerTurn = true;
             finishedEnemies = 0;

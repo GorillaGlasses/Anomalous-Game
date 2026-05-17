@@ -7,14 +7,14 @@ public class MenuManager : MonoBehaviour
 {
     public List<GameObject> menuObjects;
 
-    public void startLevel()
+    public void startLevel(string levelName)
     {
-        SceneManager.LoadScene(SceneManager.GetSceneByName("Dungeon").buildIndex);
+        SceneManager.LoadScene(levelName);
     }
 
     public void returnToMenu()
     {
-        SceneManager.LoadScene(SceneManager.GetSceneByName("MainMenu").buildIndex);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void quitGame()
