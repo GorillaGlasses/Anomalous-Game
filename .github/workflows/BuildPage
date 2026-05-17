@@ -1,6 +1,0 @@
-name: Create web build
-uses: actions/upload-pages-artifact@v3
-with:
-  path: './Builds'
-on:
-  workflow_dispatch:
