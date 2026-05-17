@@ -9,3 +9,9 @@ https://docs.google.com/document/d/1oyvqxkpnT0HIz0e6PBVdxUX0JbMgUcjqQzPBHrK_VTE/
 Upon finishing both the procedurally generated level and the pre-made level, please take this brief survey about 
 
 https://forms.gle/f3r9CDtkHEG8P1HS8
+
+## Controls:
+Movement: WASD for horizontal and vertical movement, QEZC for diagonal movement.
+Wait: Space
+Use Doors: F, then direction of door
+Camera Mode: L
