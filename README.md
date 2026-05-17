@@ -11,7 +11,7 @@ Upon finishing both the procedurally generated level and the pre-made level, ple
 https://forms.gle/f3r9CDtkHEG8P1HS8
 
 ## Controls:
-Movement: WASD for horizontal and vertical movement, QEZC for diagonal movement.
-Wait: Space
-Use Doors: F, then direction of door
+Movement: WASD for horizontal and vertical movement, QEZC for diagonal movement.\n
+Wait: Space\n
+Use Doors: F, then direction of door\n
 Camera Mode: L
