@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4367936048377949701}
   - component: {fileID: 6953765503972187294}
   - component: {fileID: 4402931360291790847}
+  - component: {fileID: -4219716887177887554}
   m_Layer: 0
   m_Name: DungeonFloorTIle
   m_TagString: BaseTile
@@ -148,3 +149,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   occupant: {fileID: 0}
+--- !u!114 &-4219716887177887554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3832385857885929567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd41f2f5bcea3804299aff56ddee6a2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
