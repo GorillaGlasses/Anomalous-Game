@@ -12,6 +12,7 @@ TagManager:
   - HUD
   - LogText
   - HealthMeter
+  - Wall
   layers:
   - Default
   - TransparentFX

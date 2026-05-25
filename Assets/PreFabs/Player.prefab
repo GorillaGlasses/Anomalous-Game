@@ -105,8 +105,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1.5
   actionCount: 0
+  sightRadius: 6
   playerBody: {fileID: 8258392503458459546}
   playerStats: {fileID: -3412067074341091367}
+  useMode: 0
   inMenu: 0
   finishedLevel: 0
   turnManager: {fileID: 0}

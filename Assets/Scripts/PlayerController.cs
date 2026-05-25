@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 1.5f;
     public int actionCount = 0;
+    public int sightRadius = 2;
     public Rigidbody2D playerBody;
     public StatBlock playerStats;
     private Transform camPos;
@@ -28,6 +29,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        discoverRadius();
+
         // Basic Movement Code, calls a function to make sure the next tile can be moved to.
         if(Input.GetKeyDown(KeyCode.W) && !inMenu && turnManager.playerTurn && !finishedLevel){
             if(camLocked && !useMode){
@@ -216,4 +219,31 @@ public class PlayerController : MonoBehaviour
         }
         return;
     }
+
+    void discoverRadius()
+    {
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(playerBody.position, sightRadius);
+        RaycastHit2D[] wallCheck;
+        foreach (Collider2D collider in hitColliders) {
+            if (collider.gameObject.TryGetComponent<DarknessToggle>(out DarknessToggle darkness))
+            {
+                UnityEngine.Vector2 direction = playerBody.position - new UnityEngine.Vector2(collider.gameObject.transform.position.x, collider.gameObject.transform.position.y);
+                wallCheck = Physics2D.RaycastAll(collider.gameObject.transform.position, direction.normalized, sightRadius);
+                foreach (RaycastHit2D hit in wallCheck)
+                {
+                    if(hit.collider.gameObject.CompareTag("Wall") && hit.collider.gameObject != collider.gameObject)
+                    {
+                        break;
+                    } else if (hit.collider.gameObject.CompareTag("Player"))
+                    {
+                        darkness.isDiscovered = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return;
+    }
+
 }
+
