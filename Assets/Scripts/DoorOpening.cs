@@ -25,11 +25,13 @@ public class DoorOpening : MonoBehaviour
         if (tileVac.occupant == null)
         {
             tileVac.occupant = this.gameObject;
+            this.gameObject.tag = "Wall";
             openDoor.enabled = true;
 
         } else if(tileVac.occupant == this.gameObject) // Opens door if closed
         {
             tileVac.occupant = null;
+            this.gameObject.tag = "Untagged";
             openDoor.enabled = false;
         }
     }

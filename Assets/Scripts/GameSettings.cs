@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using JetBrains.Annotations;
 
 public class GameSettings : MonoBehaviour
 {
+    // Character Creation Variables
     public int statPoints = 3;
     public TextMeshProUGUI pointDisplay;
     public int strength;
@@ -14,12 +16,26 @@ public class GameSettings : MonoBehaviour
     public TextMeshProUGUI constitutionDisplay;
     public PlayerStatsScriptableObject playerStats;
 
+    // Game Settings Variables
+    public bool darknessEnabled;
+    public Toggle darkToggle;
+    public GameSettingsScriptable gameSettings;
+
     void Start()
     {
         statPoints = playerStats.statPoints;
         strength = playerStats.strength;
         dexterity = playerStats.dexterity;
         constitution = playerStats.constitution;
+        if (gameSettings.isDarknessEnabled)
+        {
+            darkToggle.isOn = true;
+        }
+        else
+        {
+            darkToggle.isOn = false;
+        }
+        darknessEnabled = gameSettings.isDarknessEnabled;
     }
 
     void Update()
@@ -74,5 +90,22 @@ public class GameSettings : MonoBehaviour
         playerStats.strength = strength;
         playerStats.dexterity = dexterity;
         playerStats.constitution = constitution;
+    }
+
+    public void toggleDarkness()
+    {
+        if (darknessEnabled)
+        {
+            darknessEnabled = false;
+        }
+        else
+        {
+            darknessEnabled = true;
+        }
+    }
+
+    public void saveSettings()
+    {
+        gameSettings.isDarknessEnabled = darknessEnabled;
     }
 }
